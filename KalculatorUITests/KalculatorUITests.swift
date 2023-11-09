@@ -28,14 +28,53 @@ final class KalculatorUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
+    func testButtonsAvailable() throws {
         
         // Get all the buttons
         if let buttons = app?.buttons{
-            XCTAssert(true)
+            for digit in 0...9 {
+                XCTAssert(buttons["\(digit)"].exists, "Button \(digit) is not available")
+            }
+            
+            XCTAssert(buttons["+"].exists, "Operator '+' is not available")
+            XCTAssert(buttons["-"].exists, "Operator '-' is not available")
+            XCTAssert(buttons["*"].exists, "Operator '*' is not available")
+            XCTAssert(buttons["/"].exists, "Operator '/' is not available")
+            XCTAssert(buttons["="].exists, "Operator '=' is not available")
+            XCTAssert(buttons["C"].exists, "Clear button 'C' is not available")
+            
         }
         
         
+    }
+    
+    func testPositiveUIOutput() throws {
+        
+        app?.buttons["3"].tap()
+        app?.buttons["+"].tap()
+        app?.buttons["2"].tap()
+        app?.buttons["="].tap()
+        
+        print("Buttons tapped!")
+        
+        if let labels = app?.staticTexts{
+            XCTAssert(labels["Result Screen"].exists)
+            XCTAssertEqual(labels["Result Screen"].label, "5")
+        }
+    }
+    
+    func testNegativeUIOutput() throws {
+        
+        app?.buttons["3"].tap()
+        app?.buttons["/"].tap()
+        app?.buttons["0"].tap()
+        app?.buttons["="].tap()
+        
+        print("Buttons tapped!")
+        
+        if let labels = app?.staticTexts{
+            XCTAssertEqual(labels["Result Screen"].label, "Err")
+        }
     }
 
 }
